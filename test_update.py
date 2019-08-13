@@ -1,44 +1,49 @@
-from subprocess import check_call as run 
-from getopt import getopt, GetoptError 
-RELEASE = 'master' # default release 
-SRC_DIR = "$HOME/.src" # checkout directory 
-UPDATE_CMD = ( # base command 
-'pip install --src="%s" --upgrade -e ' 
-'git://github.com/timtadh/swork.git@%s#egg=swork' 
-)
+import sh
+from sh import git
+import time
+import os, sys
 
-@command 
-def update(args): 
-    try: 
-        opts, args = getopt(args, 'sr:', ['sudo', 'src=', 'release=', 'commit=']) 
-    except GetoptError, err: 
-        log(err) 
-        usage(error_codes['option'])
+aggregated = ""
 
-    sudo = False 
-    src_dir = SRC_DIR 
-    release = RELEASE 
-    commit = None 
-    for opt, arg in opts: 
-        if opt in ('-s', '--sudo'): 
-            sudo = True 
-        elif opt in ('-r', '--release'): 
-            release = arg 
-        elif opt in ('--src',): 
-            src_dir = arg 
-        elif opt in ('--commit',): 
-            commit = arg
+def CheckForUpdate(workingDir):
+    print("Fetching most recent code from source..." + workingDir)
 
-    if release[0].isdigit(): ## Check if it is a version 
-        release = 'r' + release 
-    release = 'origin/' + release ## assume it is a branch
+    # Fetch most up to date version of code.
+    p = git("--git-dir=" + workingDir + ".git/", "--work-tree=" + workingDir, "fetch", "origin", "master", _out=ProcessFetch, _out_bufsize=0, _tty_in=True)               
+    
+    print("Fetch complete.")
+    time.sleep(2)
+    print("Checking status for " + workingDir + "...")
+    statusCheck = git("--git-dir=" + workingDir + ".git/", "--work-tree=" + workingDir, "status")
 
-    if commit is not None: ## if a commit is supplied use that 
-        cmd = UPDATE_CMD % (src_dir, commit) 
-    else: 
-        cmd = UPDATE_CMD % (src_dir, release)
+    if "Your branch is up-to-date" in statusCheck:
+        print("Status check passes.")
+        print("Code up to date.")
+        return False
+    else:
+        print("Code update available.")
+        return True
 
-    if sudo: 
-        run('sudo %s' % cmd) 
-    else: 
-        run(cmd)
+def ProcessFetch(char, stdin):
+    global aggregated
+
+    sys.stdout.flush()
+    aggregated += char
+    if aggregated.endswith("Password for 'https://yourrepo@bitbucket.org':"):
+        print(mainLogger, "Entering password...", True)
+        stdin.put("yourpassword\n")
+
+if __name__ == "__main__":
+    checkTimeSec = 60
+    gitDir = os.getcwd()
+
+    while True:
+        print("*********** Checking for code update **************")                                                     
+    
+        if CheckForUpdate(gitDir):
+            print("Resetting code...")
+            resetCheck = git("--git-dir=" + gitDir + ".git/", "--work-tree=" + gitDir, "reset", "--hard", "origin/master")
+            print(str(resetCheck)) 
+                                                                                                                                                                
+        print("Check complete. Waiting for " + str(checkTimeSec) + "seconds until next check...", True)
+        time.sleep(checkTimeSec)
