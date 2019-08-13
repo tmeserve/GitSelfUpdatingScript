@@ -58,6 +58,7 @@ if __name__ == "__main__":
         print("*********** Checking for code update **************")                                                     
     
         if CheckForUpdate(gitDir):
+            git('pull origin master')
             print("Resetting code...")
             #resetCheck = git("--git-dir=" + gitDir + ".git/", "--work-tree=" + gitDir, "reset", "--hard", "origin/master")
             #print(str(resetCheck))
