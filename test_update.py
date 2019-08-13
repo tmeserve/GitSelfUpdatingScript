@@ -58,7 +58,7 @@ if __name__ == "__main__":
     
         if CheckForUpdate(gitDir):
             pulled = git('pull', 'origin', 'master')
-
+            print(pulled)
             print("Restarting Program...")
             os.execl(sys.executable, sys.executable, *sys.argv)
 
