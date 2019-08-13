@@ -9,13 +9,12 @@ aggregated = ""
 def CheckForUpdate(workingDir):
     print("Fetching most recent code from source..." + workingDir)
 
-    # Fetch most up to date version of code.
-    p = git("--git-dir=" + workingDir + ".git/", "--work-tree=" + workingDir, "fetch", "origin", "master", _out=ProcessFetch, _out_bufsize=0, _tty_in=True)               
-    
+    p = git("--git-dir=" + workingDir + ".git/", "--work-tree=" + workingDir, "fetch", "origin", "master", _out=ProcessFetch, _out_bufsize=0, _tty_in=True)
+
     print("Fetch complete.")
     time.sleep(2)
     print("Checking status for " + workingDir + "...")
-    statusCheck = git("--git-dir=" + workingDir + ".git/", "--work-tree=" + workingDir, "status")
+    statusCheck = git('status')
 
     if "Your branch is up-to-date" in statusCheck:
         print("Status check passes.")
