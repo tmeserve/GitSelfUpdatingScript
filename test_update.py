@@ -14,11 +14,11 @@ def CheckForUpdate(workingDir):
     print("Fetch complete.")
     time.sleep(2)
     print("Checking status for " + workingDir + "...")
-    statusCheck = git('fetch', '--dry-run', '--all')
+    statusCheck = git('remote', 'show', 'origin')
 
     print(statusCheck, ' is status check')
 
-    if not 'remote:' in statusCheck:
+    if not 'local out of date' in statusCheck:
         print("Status check passes.")
         print("Code up to date.")
         return False
