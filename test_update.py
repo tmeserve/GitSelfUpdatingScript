@@ -56,8 +56,8 @@ if __name__ == "__main__":
     while True:
         print("*********** Checking for code update **************")                    
         checked = CheckForUpdated(getDir)
-        print(checked, ' is checked'
-        if CheckForUpdate(gitDir):
+        print(checked, ' is checked')
+        if checked:
             pulled = git('pull', 'origin', 'master')
             print(pulled)
             print("Restarting Program...")
