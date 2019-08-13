@@ -54,8 +54,9 @@ if __name__ == "__main__":
     gitDir = os.getcwd() + '/'
 
     while True:
-        print("*********** Checking for code update **************")                                                     
-    
+        print("*********** Checking for code update **************")                    
+        checked = CheckForUpdated(getDir)
+        print(checked, ' is checked)
         if CheckForUpdate(gitDir):
             pulled = git('pull', 'origin', 'master')
             print(pulled)
