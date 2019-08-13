@@ -17,7 +17,7 @@ def CheckForUpdate(workingDir):
     statusCheck = git('fetch', '--dry-run', '--all')
     print(statusCheck, ' is status check')
 
-    if 'remote:' in statusCheck:
+    if not 'remote:' in statusCheck:
         print("Status check passes.")
         print("Code up to date.")
         return False
