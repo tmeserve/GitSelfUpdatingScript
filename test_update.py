@@ -16,7 +16,7 @@ def CheckForUpdate(workingDir):
     print("Checking status for " + workingDir + "...")
     statusCheck = git('status')
     print(statusCheck, ' is the status')
-    if 'nothing to commit, working tree clean' statusCheck:
+    if 'nothing to commit, working tree clean' in statusCheck:
         print("Status check passes.")
         print("Code up to date.")
         return False
