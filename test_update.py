@@ -2,6 +2,8 @@ import sh
 from sh import git
 import time
 import os, sys
+import psutil
+import logging
 
 aggregated = ""
 
@@ -33,17 +35,36 @@ def ProcessFetch(char, stdin):
         print(mainLogger, "Entering password...", True)
         stdin.put("yourpassword\n")
 
+def restart_program():
+    """Restarts the current program, with file objects and descriptors
+       cleanup
+    """
+
+    try:
+        p = psutil.Process(os.getpid())
+        for handler in p.get_open_files() + p.connections():
+            os.close(handler.fd)
+    except Exception as e:
+        logging.error(e)
+
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
 if __name__ == "__main__":
     checkTimeSec = 60
-    gitDir = os.getcwd()
+    gitDir = os.getcwd() + '/'
 
     while True:
         print("*********** Checking for code update **************")                                                     
     
         if CheckForUpdate(gitDir):
             print("Resetting code...")
-            resetCheck = git("--git-dir=" + gitDir + ".git/", "--work-tree=" + gitDir, "reset", "--hard", "origin/master")
-            print(str(resetCheck)) 
-                                                                                                                                                                
+            #resetCheck = git("--git-dir=" + gitDir + ".git/", "--work-tree=" + gitDir, "reset", "--hard", "origin/master")
+            #print(str(resetCheck))
+            #restart_program()
+            print(sys.executable)
+            os.execl(sys.executable, sys.executable, *sys.argv)
+
         print("Check complete. Waiting for " + str(checkTimeSec) + "seconds until next check...", True)
         time.sleep(checkTimeSec)
+
