@@ -58,11 +58,9 @@ if __name__ == "__main__":
         print("*********** Checking for code update **************")                                                     
     
         if CheckForUpdate(gitDir):
-            pulled = git('pull', 'origin', 'master')
-            print(pulled[0])
+            git('pull', 'origin', 'master'))
 
-            print("Resetting code...")
-            print(sys.executable)
+            print("Restarting Program...")
             os.execl(sys.executable, sys.executable, *sys.argv)
 
         print("Check complete. Waiting for " + str(checkTimeSec) + "seconds until next check...", True)
