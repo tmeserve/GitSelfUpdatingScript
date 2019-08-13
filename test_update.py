@@ -58,12 +58,10 @@ if __name__ == "__main__":
         print("*********** Checking for code update **************")                                                     
     
         if CheckForUpdate(gitDir):
-            print(git('pull', 'origin', 'master'))
-            #git('pull origin master')
+            pulled = git('pull', 'origin', 'master')
+            print(pulled[0])
+
             print("Resetting code...")
-            #resetCheck = git("--git-dir=" + gitDir + ".git/", "--work-tree=" + gitDir, "reset", "--hard", "origin/master")
-            #print(str(resetCheck))
-            #restart_program()
             print(sys.executable)
             os.execl(sys.executable, sys.executable, *sys.argv)
 
