@@ -15,7 +15,6 @@ def CheckForUpdate(workingDir):
     time.sleep(2)
     print("Checking status for " + workingDir + "...")
     statusCheck = git('fetch', '--dry-run', '--all')
-    print(statusCheck, ' is status check')
 
     if not 'remote:' in statusCheck:
         print("Status check passes.")
@@ -56,7 +55,6 @@ if __name__ == "__main__":
     while True:
         print("*********** Checking for code update **************")                    
         checked = CheckForUpdate(gitDir)
-        print(checked, ' is checked')
         if checked:
             pulled = git('pull', 'origin', 'master')
             print(pulled)
