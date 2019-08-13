@@ -2,7 +2,6 @@ import sh
 from sh import git
 import time
 import os, sys
-import psutil
 import logging
 
 aggregated = ""
